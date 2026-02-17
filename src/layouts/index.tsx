@@ -1,5 +1,4 @@
-import { Link, Outlet, useLocation } from 'umi';
-import styles from './index.less';
+import { Link, Outlet, useLocation } from '@umijs/max';
 import { Breadcrumb, Layout, Menu, } from 'antd';
 
 const { Header, Content, Footer } = Layout;
@@ -12,6 +11,10 @@ const items = [
   {
     key: '/docs',
     label: <Link to="/docs">О программе</Link>
+  },
+  {
+    key: '/feedback',
+    label: <Link to="/feedback">Обратная связь</Link>
   },
 ]
 

@@ -2,15 +2,15 @@
   "private": true,
   "author": "Georgy Zaitsev <90213591+ruzzel666@users.noreply.github.com>",
   "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "postinstall": "umi setup",
-    "setup": "umi setup",
+    "dev": "max dev",
+    "build": "max build",
+    "postinstall": "max setup",
+    "setup": "max setup",
     "start": "npm run dev"
   },
   "dependencies": {
-    "antd": "^6.3.0",
-    "umi": "^4.6.27"
+    "@umijs/max": "^4.0.7",
+    "antd": "^6.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",
