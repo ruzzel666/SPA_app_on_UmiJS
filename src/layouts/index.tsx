@@ -23,7 +23,7 @@ export default function() {
 
   return (
     <Layout style={{ minHeight: '100vh', margin: 0, padding: 0 }}>
-      <Header style={{ display: 'flex', alignItems: 'center', padding: 0, width: '100%', margin: 0, background: 'white', height: 80 }}>
+      <Header style={{ display: 'flex', alignItems: 'center', padding: 0, width: '100%', margin: 0, background: 'white', height: 64 }}>
         <Menu
           theme="dark"
           mode="horizontal"
@@ -32,17 +32,16 @@ export default function() {
           style={{ flex: 1, minWidth: 0 }}
         />
       </Header>
-      <Content style={{ padding: 0, width: '100%' }}>
+      <Content style={{ padding: 0, margin: 0, width: '100%' }}>
         <Breadcrumb
-          style={{ margin: '0', padding: '16px 0' }}
-
+          style={{ margin: 0, padding: 0 }}
         />
         <div style={{ padding: '0 48px' }}>
           <Outlet />
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        SPA-приложение на UmiJS ©{new Date().getFullYear()} | Разработчик: Зайцев Георгий | УрФУ, ИНМТ, направление 09.04.02
       </Footer>
     </Layout>
   );
