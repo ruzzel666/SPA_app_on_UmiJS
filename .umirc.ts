@@ -6,6 +6,7 @@ export default defineConfig({
     { path: "/", component: "index", title: 'Главная страница'},
     { path: "/docs", component: "docs", title: 'О программе' },
     { path: "/feedback", component: "feedback", title: 'Обратная связь' },
+    { path: "/products", component: "products", title: 'Список товаров' },
   ],
   npmClient: 'npm',
 });

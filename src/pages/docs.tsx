@@ -1,24 +1,10 @@
-import { Modal, Button, Typography, Card } from 'antd';
-import { useState } from 'react';
+import { Typography, Card } from 'antd';
+import { DeveloperPhotoModal } from '@/components';
 import developerPhoto from '../assets/foto.jpg';
 
 const { Title, Paragraph, Text } = Typography;
 
-const DocsPage = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
+export default function DocsPage() {
   return (
     <div style={{ padding: '40px', maxWidth: '900px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
       <Title level={2} style={{ textAlign: 'center', color: '#1890ff', marginBottom: '32px' }}>
@@ -65,7 +51,7 @@ const DocsPage = () => {
           <ul>
             <li><Text code>src/pages/</Text> — страницы приложения (автоматическая маршрутизация)</li>
             <li><Text code>src/assets/</Text> — статические файлы (картинки, иконки)</li>
-            <li><Text code>src/components/</Text> — переиспользуемые компоненты (если будут)</li>
+            <li><Text code>src/components/</Text> — переиспользуемые компоненты</li>
             <li><Text code>config/</Text> — настройки Umi (роутинг, плагины, прокси и т.д.)</li>
             <li><Text code>.gitignore</Text> — исключение временных и служебных файлов из репозитория</li>
           </ul>
@@ -86,40 +72,10 @@ const DocsPage = () => {
           Института новых материалов и технологий в Уральском Федеральном Университете имени первого Президента России Б.Н. Ельцина.
           Приложение разработано в рамках задания по дисциплине "Создание web-сервисов с использованием современных программных средств".
         </Paragraph>
-        <Button type="primary" size="large" onClick={showModal}>
-          🔍 Посмотреть фото разработчика
-        </Button>
-      </Card>
-
-      <Modal
-        title="Фото разработчика"
-        open={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={null}
-        centered
-        width={600}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <img
-            src={developerPhoto}
-            alt="Разработчик"
-            style={{
-              width: '80%',
-              borderRadius: '12px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              transition: 'transform 0.3s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-          />
-          <p style={{ marginTop: '16px', fontSize: '14px', color: '#666' }}>
-            Спасибо за просмотр!
-          </p>
+        <div style={{ marginTop: '16px' }}>
+          <DeveloperPhotoModal photoSrc={developerPhoto} />
         </div>
-      </Modal>
+      </Card>
     </div>
   );
-};
-
-export default DocsPage;
+}
