@@ -9,8 +9,10 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.17",
     "@umijs/max": "^4.0.7",
-    "antd": "^6.3.0"
+    "antd": "^6.3.0",
+    "graphql": "^16.13.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

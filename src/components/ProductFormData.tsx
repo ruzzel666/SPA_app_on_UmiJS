@@ -5,10 +5,13 @@ const { Option } = Select;
 interface ProductFormDataProps {
   name: string;
   category: string;
+  price?: number;
   categories: string[];
   onNameChange: (name: string) => void;
   onCategoryChange: (category: string) => void;
+  onPriceChange?: (price: number) => void;
   showLabel?: boolean;
+  showPrice?: boolean;
 }
 
 /**
@@ -17,10 +20,13 @@ interface ProductFormDataProps {
 export default function ProductFormData({
   name,
   category,
+  price = 0,
   categories,
   onNameChange,
   onCategoryChange,
+  onPriceChange,
   showLabel = true,
+  showPrice = false,
 }: ProductFormDataProps) {
   return (
     <Space direction="vertical" style={{ width: '100%', marginTop: showLabel ? '16px' : 0 }}>
@@ -35,6 +41,23 @@ export default function ProductFormData({
           autoFocus={!showLabel}
         />
       </div>
+      
+      {showPrice && onPriceChange && (
+        <div>
+          {showLabel && (
+            <label style={{ display: 'block', marginBottom: '8px' }}>Цена (₽):</label>
+          )}
+          <Input
+            type="number"
+            value={price}
+            onChange={(e) => onPriceChange(Number(e.target.value))}
+            placeholder="Введите цену товара"
+            min={0}
+            step={0.01}
+          />
+        </div>
+      )}
+      
       <div>
         {showLabel && (
           <label style={{ display: 'block', marginBottom: '8px' }}>Категория:</label>

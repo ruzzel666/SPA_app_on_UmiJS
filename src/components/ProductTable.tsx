@@ -1,10 +1,19 @@
-import { Table, Button, Tag, Space } from 'antd';
+import { Table, Button, Tag, Space, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+
+const { Text } = Typography;
+
+export interface Category {
+  id: number;
+  name: string;
+}
 
 export interface Product {
   key: string;
+  id: number;
   name: string;
-  category: string;
+  price: number;
+  category: Category;
 }
 
 interface ProductTableProps {
@@ -36,13 +45,22 @@ export default function ProductTable({ products, onDelete, onEdit }: ProductTabl
       key: 'name',
     },
     {
+      title: 'Цена',
+      dataIndex: 'price',
+      key: 'price',
+      width: 100,
+      render: (price: number) => (
+        <Text strong>{Math.round(price)} ₽</Text>
+      ),
+    },
+    {
       title: 'Категория',
       dataIndex: 'category',
       key: 'category',
       width: 150,
-      render: (category: string) => (
-        <Tag color={categoryColors[category] || 'default'}>
-          {category}
+      render: (category: Category) => (
+        <Tag color={categoryColors[category.name] || 'default'}>
+          {category.name}
         </Tag>
       ),
     },
@@ -69,6 +87,7 @@ export default function ProductTable({ products, onDelete, onEdit }: ProductTabl
       dataSource={products}
       pagination={{ pageSize: 10 }}
       locale={{ emptyText: 'Список товаров пуст' }}
+      rowKey="key"
     />
   );
 }

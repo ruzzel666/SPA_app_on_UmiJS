@@ -4,12 +4,13 @@ import { Input, Button, Space, Select, message } from 'antd';
 const { Option } = Select;
 
 interface ProductFormProps {
-  onAdd: (name: string, category: string) => void;
+  onAdd: (name: string, category: string, price: number) => void;
   categories: string[];
 }
 
 export default function ProductForm({ onAdd, categories }: ProductFormProps) {
   const [productName, setProductName] = useState('');
+  const [productPrice, setProductPrice] = useState<number | ''>('');
   const [selectedCategory, setSelectedCategory] = useState('Другое');
   const [newCategory, setNewCategory] = useState('');
   const [isAddingCategory, setIsAddingCategory] = useState(false);
@@ -20,7 +21,7 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
       return;
     }
 
-    const category = isAddingCategory 
+    const category = isAddingCategory
       ? (newCategory.trim() || selectedCategory)
       : selectedCategory;
 
@@ -29,8 +30,16 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
       return;
     }
 
-    onAdd(productName.trim(), category);
+    // Проверяем цену
+    const price = typeof productPrice === 'number' ? productPrice : 0;
+    if (price <= 0) {
+      message.warning('Введите цену больше нуля');
+      return;
+    }
+
+    onAdd(productName.trim(), category, price);
     setProductName('');
+    setProductPrice('');
     setNewCategory('');
     setIsAddingCategory(false);
   };
@@ -43,6 +52,16 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
           onPressEnter={handleSubmit}
+        />
+        <Input
+          type="number"
+          placeholder="Цена"
+          value={productPrice}
+          onChange={(e) => setProductPrice(e.target.value === '' ? '' : Number(e.target.value))}
+          onPressEnter={handleSubmit}
+          style={{ width: 100 }}
+          min={0}
+          step={0.01}
         />
         <Button type="primary" onClick={handleSubmit}>
           Добавить
