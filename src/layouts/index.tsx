@@ -27,13 +27,11 @@ const menuItems = [
   },
 ]
 
-// Проверка авторизации
 function checkAuth() {
   if (typeof window === 'undefined') return false;
   return !!localStorage.getItem('auth_token');
 }
 
-// Получение пользователя
 function getCurrentUser() {
   if (typeof window === 'undefined') return null;
   const userStr = localStorage.getItem('auth_user');
@@ -85,26 +83,21 @@ export default function AppLayout() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth);
 
-  // Обновляем состояние при изменении авторизации
   useEffect(() => {
     const handleStorageChange = () => {
       setIsAuthenticated(checkAuth());
     };
 
     window.addEventListener('storage', handleStorageChange);
-    // Проверяем при монтировании
     setIsAuthenticated(checkAuth());
 
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleLogout = () => {
-    // Очищаем localStorage
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
-    // Обновляем состояние
     setIsAuthenticated(false);
-    // Перенаправляем на страницу входа
     window.location.href = '/login';
   };
 

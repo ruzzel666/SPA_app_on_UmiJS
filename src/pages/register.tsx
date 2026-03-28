@@ -5,7 +5,6 @@ import { gql, useMutation } from '@apollo/client';
 
 const { Title } = Typography;
 
-// GraphQL мутация для регистрации
 const REGISTER = gql`
   mutation Register($username: String!, $password: String!) {
     register(input: { username: $username, password: $password }) {
@@ -29,9 +28,7 @@ export default function RegisterPage() {
         },
         onCompleted: (data) => {
           if (data?.register?.token) {
-            // Сохраняем токен в localStorage
             localStorage.setItem('auth_token', data.register.token);
-            // Сохраняем пользователя
             localStorage.setItem('auth_user', JSON.stringify({
               username: data.register.username,
               role: 'User',
@@ -47,10 +44,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       minHeight: '100vh',
       background: '#f0f2f5'
     }}>
@@ -120,9 +117,9 @@ export default function RegisterPage() {
           </Form.Item>
 
           <Form.Item style={{ marginBottom: 0 }}>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
+            <Button
+              type="primary"
+              htmlType="submit"
               loading={loading}
               block
               size="large"

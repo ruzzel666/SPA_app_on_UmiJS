@@ -1,10 +1,6 @@
 import React, { createContext, useContext, type ReactNode } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 
-// ============================================================================
-// GraphQL запросы и мутации (схема HotChocolate GraphQLShop API)
-// ============================================================================
-
 const GET_PRODUCTS = gql`
   query GetProductsForIndex($term: String) {
     products(
@@ -65,17 +61,13 @@ const DELETE_PRODUCT = gql`
   }
 `;
 
-// ============================================================================
-// Типы данных
-// ============================================================================
-
 export interface Category {
   id: number;
   name: string;
 }
 
 export interface Product {
-  key: string; // Для совместимости с Ant Design Table
+  key: string;
   id: number;
   name: string;
   price: number;
@@ -97,27 +89,19 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-// Категории по умолчанию (для отображения, если в API нет категорий)
 const DEFAULT_CATEGORIES = ['Электроника', 'Одежда', 'Продукты', 'Бытовая техника', 'Другое'];
-
-// ============================================================================
-// Provider компонент
-// ============================================================================
 
 export function ProductProvider({ children }: { children: ReactNode }) {
   const [searchTerm, setSearchTerm] = React.useState('');
 
-  // Проверяем наличие токена перед выполнением запроса
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
 
-  // Выполняем запрос к API с поиском ТОЛЬКО если есть токен
   const { data, loading, error, refetch } = useQuery(GET_PRODUCTS, {
     variables: { term: searchTerm },
     notifyOnNetworkStatusChange: true,
-    skip: !token, // Пропускаем запрос если нет токена
+    skip: !token,
   });
 
-  // Инициализируем мутации
   const [addProductMutation] = useMutation(ADD_PRODUCT, {
     onCompleted: () => refetch(),
   });
@@ -130,7 +114,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     onCompleted: () => refetch(),
   });
 
-  // Преобразуем данные из API в формат для приложения
   const products: Product[] = React.useMemo(() => {
     const items = data?.products?.items || [];
     return items.map((item: any) => ({
@@ -145,7 +128,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     }));
   }, [data]);
 
-  // Функции для работы с продуктами
   const addProduct = async (name: string, categoryName: string, price: number = 0) => {
     await addProductMutation({
       variables: {
@@ -177,7 +159,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Вычисляем категории на основе полученных данных
   const categories = React.useMemo(() => {
     const productCategories = products.map((p) => p.category.name);
     return Array.from(new Set([...DEFAULT_CATEGORIES, ...productCategories])).sort();
@@ -200,10 +181,6 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     </ProductContext.Provider>
   );
 }
-
-// ============================================================================
-// Хук для использования контекста
-// ============================================================================
 
 export function useProducts() {
   const context = useContext(ProductContext);

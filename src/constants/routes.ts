@@ -1,6 +1,3 @@
-/**
- * Константы маршрутов приложения
- */
 export const ROUTES = {
   HOME: '/',
   DOCS: '/docs',

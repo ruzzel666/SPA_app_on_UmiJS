@@ -10,9 +10,6 @@ interface DeveloperPhotoModalProps {
   buttonText?: string;
 }
 
-/**
- * Модальное окно для отображения фото разработчика
- */
 export default function DeveloperPhotoModal({
   photoSrc,
   caption = 'Спасибо за просмотр!',

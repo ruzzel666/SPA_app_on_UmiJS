@@ -14,9 +14,6 @@ interface ProductFormDataProps {
   showPrice?: boolean;
 }
 
-/**
- * Универсальный компонент формы товара (для добавления и редактирования)
- */
 export default function ProductFormData({
   name,
   category,
@@ -41,7 +38,7 @@ export default function ProductFormData({
           autoFocus={!showLabel}
         />
       </div>
-      
+
       {showPrice && onPriceChange && (
         <div>
           {showLabel && (
@@ -57,7 +54,7 @@ export default function ProductFormData({
           />
         </div>
       )}
-      
+
       <div>
         {showLabel && (
           <label style={{ display: 'block', marginBottom: '8px' }}>Категория:</label>

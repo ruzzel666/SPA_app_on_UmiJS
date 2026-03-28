@@ -25,7 +25,6 @@ function ProductsContent() {
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  // Проверка авторизации при загрузке
   useEffect(() => {
     const token = localStorage.getItem('auth_token');
     if (!token) {
@@ -36,7 +35,6 @@ function ProductsContent() {
     }
   }, [navigate]);
 
-  // Обработка ошибок авторизации от сервера
   useEffect(() => {
     if (error?.graphQLErrors?.some((e: any) => e.extensions?.code === 'AUTH_NOT_AUTHENTICATED')) {
       localStorage.removeItem('auth_token');
@@ -94,12 +92,10 @@ function ProductsContent() {
 
   const editingProduct = products.find((p) => p.key === editingKey);
 
-  // Обработка поиска
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  // Показываем спиннер во время проверки авторизации
   if (isCheckingAuth) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
@@ -112,7 +108,6 @@ function ProductsContent() {
     <div style={{ padding: '24px 0' }}>
       <Title level={2}>Список товаров</Title>
 
-      {/* Поиск товаров */}
       <div style={{ marginBottom: 16 }}>
         <Input.Search
           placeholder="Поиск по названию товара"
@@ -124,14 +119,12 @@ function ProductsContent() {
         />
       </div>
 
-      {/* Индикатор загрузки */}
       {loading && (
         <div style={{ marginBottom: 16, textAlign: 'center' }}>
           <Spin tip="Загрузка товаров..." />
         </div>
       )}
 
-      {/* Обработка ошибок (кроме ошибок авторизации) */}
       {error && !error?.graphQLErrors?.some((e: any) => e.extensions?.code === 'AUTH_NOT_AUTHENTICATED') && (
         <Alert
           message="Ошибка"
@@ -171,7 +164,6 @@ function ProductsContent() {
   );
 }
 
-// Основной компонент с ProductProvider
 export default function Products() {
   return (
     <ProductProvider>

@@ -6,7 +6,6 @@ import { useMutation } from '@apollo/client';
 
 const { Title } = Typography;
 
-// GraphQL мутация для входа
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(input: { username: $username, password: $password }) {
@@ -24,20 +23,16 @@ export default function LoginPage() {
     },
     onCompleted: (data) => {
       if (data?.login?.token) {
-        // Сохраняем токен в localStorage
         localStorage.setItem('auth_token', data.login.token);
-        // Сохраняем пользователя
         localStorage.setItem('auth_user', JSON.stringify({
           username: data.login.username,
           role: 'User',
         }));
 
-        // Принудительно обновляем кэш Apollo
         window.dispatchEvent(new Event('storage'));
 
         message.success('Вход выполнен успешно');
 
-        // Небольшая задержка перед переходом
         setTimeout(() => {
           navigate('/products', { replace: true });
         }, 500);

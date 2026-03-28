@@ -15,9 +15,6 @@ interface FeedbackFormProps {
   onSubmit?: (data: FieldType) => void;
 }
 
-/**
- * Форма обратной связи с модальным оклом предпросмотра
- */
 export default function FeedbackForm({ onSubmit }: FeedbackFormProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState<FieldType>({});

@@ -30,7 +30,6 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
       return;
     }
 
-    // Проверяем цену
     const price = typeof productPrice === 'number' ? productPrice : 0;
     if (price <= 0) {
       message.warning('Введите цену больше нуля');

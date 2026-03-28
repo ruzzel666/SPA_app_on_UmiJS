@@ -3,9 +3,6 @@ import type { Product } from '../contexts/ProductContext';
 
 const STORAGE_KEY = 'products_list';
 
-/**
- * Хук для работы с localStorage товаров
- */
 export function useProductsStorage() {
   const [products, setProducts] = useState<Product[]>(() => {
     try {

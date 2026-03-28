@@ -3,10 +3,6 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import type { ReactNode } from 'react';
 
-// ============================================================================
-// Вспомогательная функция для получения токена из localStorage
-// ============================================================================
-
 const TOKEN_KEY = 'auth_token';
 
 function getAuthToken(): string | null {
@@ -14,11 +10,6 @@ function getAuthToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
 
-// ============================================================================
-// Настройка Apollo Client для работы с GraphQLShop API
-// ============================================================================
-
-// HTTP ссылка
 const httpLink = createHttpLink({
   uri: 'https://localhost:7273/graphql',
   fetchOptions: {
@@ -26,7 +17,6 @@ const httpLink = createHttpLink({
   },
 });
 
-// Ссылка для добавления заголовка авторизации (читает токен при каждом запросе!)
 const authLink = setContext((_, { headers }) => {
   const token = getAuthToken();
   return {
@@ -37,7 +27,6 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// Обработчик ошибок
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     for (const err of graphQLErrors) {
@@ -83,10 +72,6 @@ const client = new ApolloClient({
   },
   connectToDevTools: true,
 });
-
-// ============================================================================
-// Apollo Provider для приложения
-// ============================================================================
 
 export default function AppProvider({ children }: { children: ReactNode }) {
   return (

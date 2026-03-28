@@ -7,9 +7,6 @@ interface BaseModalProps extends Omit<ModalProps, 'open'> {
   onOk?: () => void;
 }
 
-/**
- * Базовый компонент модального окна с общей логикой
- */
 export default function BaseModal({ open, onClose, onOk, children, ...props }: BaseModalProps) {
   const handleOk = () => {
     onOk?.();
