@@ -1,35 +1,14 @@
-import React, { createContext, useContext, type ReactNode } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 
 const GET_PRODUCTS = gql`
   query GetProductsForIndex($term: String) {
-    products(
-      where: { name: { contains: $term } },
-      take: 50,
-      order: { price: DESC }
-    ) {
+    products(where: { name: { contains: $term } }, take: 50, order: { price: DESC }) {
       items {
         id
         name
         price
-        category {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-
-const GET_PRODUCT_BY_ID = gql`
-  query GetProductById($id: Int!) {
-    product(id: $id) {
-      id
-      name
-      price
-      category {
-        id
-        name
+        category { id name }
       }
     }
   }
@@ -37,21 +16,13 @@ const GET_PRODUCT_BY_ID = gql`
 
 const ADD_PRODUCT = gql`
   mutation AddProduct($input: AddProductInput!) {
-    addProduct(input: $input) {
-      id
-      name
-      price
-    }
+    addProduct(input: $input) { id name price }
   }
 `;
 
 const UPDATE_PRODUCT = gql`
   mutation UpdateProduct($input: UpdateProductInput!) {
-    updateProduct(input: $input) {
-      id
-      name
-      price
-    }
+    updateProduct(input: $input) { id name price }
   }
 `;
 
@@ -87,13 +58,12 @@ interface ProductContextType {
   refetch: () => void;
 }
 
-const ProductContext = createContext<ProductContextType | undefined>(undefined);
-
 const DEFAULT_CATEGORIES = ['Электроника', 'Одежда', 'Продукты', 'Бытовая техника', 'Другое'];
 
-export function ProductProvider({ children }: { children: ReactNode }) {
-  const [searchTerm, setSearchTerm] = React.useState('');
+const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
+export function ProductProvider({ children }: { children: React.ReactNode }) {
+  const [searchTerm, setSearchTerm] = useState('');
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
 
   const { data, loading, error, refetch } = useQuery(GET_PRODUCTS, {
@@ -102,81 +72,42 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     skip: !token,
   });
 
-  const [addProductMutation] = useMutation(ADD_PRODUCT, {
-    onCompleted: () => refetch(),
-  });
+  const [addProductMutation] = useMutation(ADD_PRODUCT, { onCompleted: () => refetch() });
+  const [updateProductMutation] = useMutation(UPDATE_PRODUCT, { onCompleted: () => refetch() });
+  const [deleteProductMutation] = useMutation(DELETE_PRODUCT, { onCompleted: () => refetch() });
 
-  const [updateProductMutation] = useMutation(UPDATE_PRODUCT, {
-    onCompleted: () => refetch(),
-  });
-
-  const [deleteProductMutation] = useMutation(DELETE_PRODUCT, {
-    onCompleted: () => refetch(),
-  });
-
-  const products: Product[] = React.useMemo(() => {
+  const products = useMemo<Product[]>(() => {
     const items = data?.products?.items || [];
     return items.map((item: any) => ({
       key: String(item.id),
       id: item.id,
       name: item.name,
       price: item.price,
-      category: {
-        id: item.category?.id || 0,
-        name: item.category?.name || 'Другое',
-      },
+      category: { id: item.category?.id || 0, name: item.category?.name || 'Другое' },
     }));
   }, [data]);
 
   const addProduct = async (name: string, categoryName: string, price: number = 0) => {
-    await addProductMutation({
-      variables: {
-        input: {
-          name,
-          price,
-          categoryName,
-        },
-      },
-    });
+    await addProductMutation({ variables: { input: { name, price, categoryName } } });
   };
 
   const deleteProduct = async (id: number) => {
-    await deleteProductMutation({
-      variables: { id },
-    });
+    await deleteProductMutation({ variables: { id } });
   };
 
   const editProduct = async (id: number, name: string, categoryName: string, price: number) => {
-    await updateProductMutation({
-      variables: {
-        input: {
-          id,
-          name,
-          price,
-          categoryName,
-        },
-      },
-    });
+    await updateProductMutation({ variables: { input: { id, name, price, categoryName } } });
   };
 
-  const categories = React.useMemo(() => {
+  const categories = useMemo(() => {
     const productCategories = products.map((p) => p.category.name);
     return Array.from(new Set([...DEFAULT_CATEGORIES, ...productCategories])).sort();
   }, [products]);
 
   return (
-    <ProductContext.Provider value={{
-      products,
-      loading,
-      error,
-      addProduct,
-      deleteProduct,
-      editProduct,
-      categories,
-      searchTerm,
-      setSearchTerm,
-      refetch,
-    }}>
+    <ProductContext.Provider
+      value={{ products, loading, error, addProduct, deleteProduct, editProduct, categories, searchTerm, setSearchTerm, refetch }}
+    >
       {children}
     </ProductContext.Provider>
   );

@@ -21,10 +21,7 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
       return;
     }
 
-    const category = isAddingCategory
-      ? (newCategory.trim() || selectedCategory)
-      : selectedCategory;
-
+    const category = isAddingCategory ? (newCategory.trim() || selectedCategory) : selectedCategory;
     if (!category) {
       message.warning('Выберите или введите категорию');
       return;
@@ -45,7 +42,7 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
 
   return (
     <Space direction="vertical" style={{ width: '100%', maxWidth: 500 }}>
-      <Space.Compact style={{ width: '100%' }}>
+      <Space.Compact style={{ width: '100%', marginBottom: 16 }}>
         <Input
           placeholder="Название товара"
           value={productName}
@@ -80,9 +77,7 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
                 <Option key={cat} value={cat}>{cat}</Option>
               ))}
             </Select>
-            <Button onClick={() => setIsAddingCategory(true)}>
-              + Категория
-            </Button>
+            <Button onClick={() => setIsAddingCategory(true)}>+ Категория</Button>
           </>
         ) : (
           <>
@@ -92,9 +87,7 @@ export default function ProductForm({ onAdd, categories }: ProductFormProps) {
               onChange={(e) => setNewCategory(e.target.value)}
               onPressEnter={handleSubmit}
             />
-            <Button onClick={() => setIsAddingCategory(false)}>
-              Отмена
-            </Button>
+            <Button onClick={() => setIsAddingCategory(false)}>Отмена</Button>
           </>
         )}
       </Space.Compact>

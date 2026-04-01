@@ -49,9 +49,7 @@ export default function ProductTable({ products, onDelete, onEdit }: ProductTabl
       dataIndex: 'price',
       key: 'price',
       width: 100,
-      render: (price: number) => (
-        <Text strong>{Math.round(price)} ₽</Text>
-      ),
+      render: (price: number) => <Text strong>{Math.round(price)} ₽</Text>,
     },
     {
       title: 'Категория',
@@ -59,9 +57,7 @@ export default function ProductTable({ products, onDelete, onEdit }: ProductTabl
       key: 'category',
       width: 150,
       render: (category: Category) => (
-        <Tag color={categoryColors[category.name] || 'default'}>
-          {category.name}
-        </Tag>
+        <Tag color={categoryColors[category.name] || 'default'}>{category.name}</Tag>
       ),
     },
     {

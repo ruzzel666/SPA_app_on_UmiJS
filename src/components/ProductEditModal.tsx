@@ -10,13 +10,7 @@ interface ProductEditModalProps {
   categories: string[];
 }
 
-export default function ProductEditModal({
-  open,
-  onClose,
-  onSave,
-  product,
-  categories,
-}: ProductEditModalProps) {
+export default function ProductEditModal({ open, onClose, onSave, product, categories }: ProductEditModalProps) {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState(0);
@@ -30,9 +24,7 @@ export default function ProductEditModal({
   }, [product]);
 
   const handleSave = () => {
-    if (!name.trim()) {
-      return;
-    }
+    if (!name.trim()) return;
     onSave(name.trim(), category, price);
   };
 

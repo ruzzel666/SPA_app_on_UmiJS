@@ -5,16 +5,14 @@ import type { ReactNode } from 'react';
 
 const TOKEN_KEY = 'auth_token';
 
-function getAuthToken(): string | null {
+const getAuthToken = (): string | null => {
   if (typeof window === 'undefined') return null;
   return localStorage.getItem(TOKEN_KEY);
-}
+};
 
 const httpLink = createHttpLink({
   uri: 'https://localhost:7273/graphql',
-  fetchOptions: {
-    credentials: 'include',
-  },
+  fetchOptions: { credentials: 'include' },
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -23,20 +21,18 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       Authorization: token ? `Bearer ${token}` : '',
-    }
+    },
   };
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    for (const err of graphQLErrors) {
-      if (err.extensions?.code === 'AUTH_NOT_AUTHENTICATED') {
+    graphQLErrors.forEach(({ message, extensions }) => {
+      if (extensions?.code === 'AUTH_NOT_AUTHENTICATED') {
         console.warn('Требуется авторизация');
-        return;
       }
-    }
+    });
   }
-
   if (networkError) {
     console.error('Network error:', networkError);
   }
@@ -48,35 +44,19 @@ const client = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          products: {
-            merge(existing, incoming) {
-              return incoming;
-            },
-          },
+          products: { merge: (_, incoming) => incoming },
         },
       },
     },
   }),
   defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-and-network',
-      errorPolicy: 'all',
-    },
-    query: {
-      fetchPolicy: 'network-only',
-      errorPolicy: 'all',
-    },
-    mutate: {
-      errorPolicy: 'all',
-    },
+    watchQuery: { fetchPolicy: 'cache-and-network', errorPolicy: 'all' },
+    query: { fetchPolicy: 'network-only', errorPolicy: 'all' },
+    mutate: { errorPolicy: 'all' },
   },
   connectToDevTools: true,
 });
 
 export default function AppProvider({ children }: { children: ReactNode }) {
-  return (
-    <ApolloProvider client={client}>
-      {children}
-    </ApolloProvider>
-  );
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }

@@ -1,24 +1,17 @@
 import { Modal } from 'antd';
 import type { ModalProps } from 'antd';
 
-interface BaseModalProps extends Omit<ModalProps, 'open'> {
-  open: boolean;
+interface BaseModalProps extends Omit<ModalProps, 'onOk'> {
   onClose: () => void;
-  onOk?: () => void;
+  onOk: () => void;
 }
 
-export default function BaseModal({ open, onClose, onOk, children, ...props }: BaseModalProps) {
-  const handleOk = () => {
-    onOk?.();
-    onClose();
-  };
-
+export default function BaseModal({ onClose, onOk, children, ...props }: BaseModalProps) {
   return (
     <Modal
-      open={open}
       onCancel={onClose}
-      onOk={handleOk}
-      centered
+      onOk={onOk}
+      destroyOnClose
       {...props}
     >
       {children}

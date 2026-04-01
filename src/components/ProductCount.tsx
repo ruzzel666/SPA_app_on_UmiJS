@@ -1,10 +1,10 @@
 import { Typography } from 'antd';
 
+const { Text } = Typography;
+
 interface ProductCountProps {
   count: number;
 }
-
-const { Text } = Typography;
 
 export default function ProductCount({ count }: ProductCountProps) {
   return (

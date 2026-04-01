@@ -2,32 +2,22 @@ import { useState, useEffect } from 'react';
 import { Typography, message, Spin, Alert, Input } from 'antd';
 import { useNavigate } from '@umijs/max';
 import { useProducts } from '@/contexts/ProductContext';
-import { ProductForm, ProductTable, ProductCount, ProductEditModal } from '@/components';
+import { ProductForm, ProductTable, ProductCount, ProductEditModal, ProductChart } from '@/components';
 import { ProductProvider } from '@/contexts/ProductContext';
 import type { Product } from '@/components/ProductTable';
 
 const { Title } = Typography;
 
+const checkAuth = () => typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
+
 function ProductsContent() {
   const navigate = useNavigate();
-  const {
-    products,
-    loading,
-    error,
-    addProduct,
-    deleteProduct,
-    editProduct,
-    categories,
-    searchTerm,
-    setSearchTerm,
-  } = useProducts();
-
+  const { products, loading, error, addProduct, deleteProduct, editProduct, categories, searchTerm, setSearchTerm } = useProducts();
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
+    if (!checkAuth()) {
       message.warning('Требуется авторизация для просмотра товаров');
       navigate('/login');
     } else {
@@ -46,8 +36,7 @@ function ProductsContent() {
 
   const handleAdd = async (name: string, category: string, price: number) => {
     try {
-      const finalPrice = price > 0 ? price : 1;
-      await addProduct(name, category, finalPrice);
+      await addProduct(name, category, price > 0 ? price : 1);
       message.success('Товар добавлен');
     } catch (e: any) {
       message.error(e.message || 'Ошибка при добавлении товара');
@@ -66,35 +55,21 @@ function ProductsContent() {
     }
   };
 
-  const handleEdit = (key: string) => {
-    setEditingKey(key);
-  };
-
   const handleSaveEdit = async (name: string, category: string, price: number) => {
-    if (editingKey) {
-      try {
-        const product = products.find((p) => p.key === editingKey);
-        if (product) {
-          const finalPrice = price > 0 ? price : product.price;
-          await editProduct(product.id, name, category, finalPrice);
-          message.success('Товар обновлён');
-          setEditingKey(null);
-        }
-      } catch (e: any) {
-        message.error(e.message || 'Ошибка при обновлении товара');
+    if (!editingKey) return;
+    try {
+      const product = products.find((p) => p.key === editingKey);
+      if (product) {
+        await editProduct(product.id, name, category, price > 0 ? price : product.price);
+        message.success('Товар обновлён');
+        setEditingKey(null);
       }
+    } catch (e: any) {
+      message.error(e.message || 'Ошибка при обновлении товара');
     }
   };
 
-  const handleCloseModal = () => {
-    setEditingKey(null);
-  };
-
   const editingProduct = products.find((p) => p.key === editingKey);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   if (isCheckingAuth) {
     return (
@@ -108,56 +83,40 @@ function ProductsContent() {
     <div style={{ padding: '24px 0' }}>
       <Title level={2}>Список товаров</Title>
 
-      <div style={{ marginBottom: 16 }}>
-        <Input.Search
-          placeholder="Поиск по названию товара"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          onSearch={setSearchTerm}
-          style={{ maxWidth: 400 }}
-          allowClear
-        />
-      </div>
+      <Input.Search
+        placeholder="Поиск по названию товара"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onSearch={setSearchTerm}
+        style={{ maxWidth: 400, marginBottom: 24 }}
+        allowClear
+      />
 
-      {loading && (
-        <div style={{ marginBottom: 16, textAlign: 'center' }}>
-          <Spin tip="Загрузка товаров..." />
-        </div>
-      )}
+      {loading && <Spin tip="Загрузка товаров..." style={{ display: 'block', marginBottom: 16 }} />}
 
       {error && !error?.graphQLErrors?.some((e: any) => e.extensions?.code === 'AUTH_NOT_AUTHENTICATED') && (
-        <Alert
-          message="Ошибка"
-          description={error.message}
-          type="error"
-          showIcon
-          style={{ marginBottom: 16 }}
-        />
+        <Alert message="Ошибка" description={error.message} type="error" showIcon style={{ marginBottom: 16 }} />
       )}
 
       <div style={{ marginBottom: 24 }}>
         <ProductForm onAdd={handleAdd} categories={categories} />
       </div>
 
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 24 }}>
         <ProductCount count={products.length} />
       </div>
 
-      <ProductTable
-        products={products}
-        onDelete={handleDelete}
-        onEdit={handleEdit}
-      />
+      <div style={{ marginBottom: 24 }}>
+        <ProductTable products={products} onDelete={handleDelete} onEdit={setEditingKey} />
+      </div>
+
+      <ProductChart products={products} />
 
       <ProductEditModal
         open={!!editingKey}
-        onClose={handleCloseModal}
+        onClose={() => setEditingKey(null)}
         onSave={handleSaveEdit}
-        product={editingProduct ? {
-          name: editingProduct.name,
-          category: editingProduct.category.name,
-          price: editingProduct.price
-        } : null}
+        product={editingProduct ? { name: editingProduct.name, category: editingProduct.category.name, price: editingProduct.price } : null}
         categories={categories}
       />
     </div>

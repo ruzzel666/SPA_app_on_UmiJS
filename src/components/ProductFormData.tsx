@@ -28,9 +28,7 @@ export default function ProductFormData({
   return (
     <Space direction="vertical" style={{ width: '100%', marginTop: showLabel ? '16px' : 0 }}>
       <div>
-        {showLabel && (
-          <label style={{ display: 'block', marginBottom: '8px' }}>Название:</label>
-        )}
+        {showLabel && <label style={{ display: 'block', marginBottom: '8px' }}>Название:</label>}
         <Input
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
@@ -41,9 +39,7 @@ export default function ProductFormData({
 
       {showPrice && onPriceChange && (
         <div>
-          {showLabel && (
-            <label style={{ display: 'block', marginBottom: '8px' }}>Цена (₽):</label>
-          )}
+          {showLabel && <label style={{ display: 'block', marginBottom: '8px' }}>Цена (₽):</label>}
           <Input
             type="number"
             value={price}
@@ -56,9 +52,7 @@ export default function ProductFormData({
       )}
 
       <div>
-        {showLabel && (
-          <label style={{ display: 'block', marginBottom: '8px' }}>Категория:</label>
-        )}
+        {showLabel && <label style={{ display: 'block', marginBottom: '8px' }}>Категория:</label>}
         <Select
           value={category}
           onChange={onCategoryChange}
@@ -66,9 +60,7 @@ export default function ProductFormData({
           placeholder="Выберите категорию"
         >
           {categories.map((cat) => (
-            <Option key={cat} value={cat}>
-              {cat}
-            </Option>
+            <Option key={cat} value={cat}>{cat}</Option>
           ))}
         </Select>
       </div>

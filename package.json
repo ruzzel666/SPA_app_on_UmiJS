@@ -9,10 +9,12 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.6.7",
     "@apollo/client": "^3.7.17",
     "@umijs/max": "^4.0.7",
     "antd": "^6.3.0",
-    "graphql": "^16.13.1"
+    "graphql": "^16.13.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

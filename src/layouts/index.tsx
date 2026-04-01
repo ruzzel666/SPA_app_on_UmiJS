@@ -2,44 +2,28 @@ import { Link, Outlet, useLocation } from '@umijs/max';
 import { Breadcrumb, Layout, Menu, Button, Dropdown, Avatar, Space } from 'antd';
 import { ROUTES } from '@/constants/routes';
 import AppProvider from '@/AppProvider';
-import { ProductProvider } from '@/contexts/ProductContext';
 import type { MenuProps } from 'antd';
 import { useState, useEffect } from 'react';
 
 const { Header, Content, Footer } = Layout;
 
 const menuItems = [
-  {
-    key: ROUTES.HOME,
-    label: <Link to={ROUTES.HOME}>Home</Link>
-  },
-  {
-    key: ROUTES.DOCS,
-    label: <Link to={ROUTES.DOCS}>О программе</Link>
-  },
-  {
-    key: ROUTES.PRODUCTS,
-    label: <Link to={ROUTES.PRODUCTS}>Список товаров</Link>
-  },
-  {
-    key: ROUTES.FEEDBACK,
-    label: <Link to={ROUTES.FEEDBACK}>Обратная связь</Link>
-  },
-]
+  { key: ROUTES.HOME, label: <Link to={ROUTES.HOME}>Home</Link> },
+  { key: ROUTES.DOCS, label: <Link to={ROUTES.DOCS}>О программе</Link> },
+  { key: ROUTES.PRODUCTS, label: <Link to={ROUTES.PRODUCTS}>Список товаров</Link> },
+  { key: ROUTES.FEEDBACK, label: <Link to={ROUTES.FEEDBACK}>Обратная связь</Link> },
+];
 
-function checkAuth() {
-  if (typeof window === 'undefined') return false;
-  return !!localStorage.getItem('auth_token');
-}
+const checkAuth = () => typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 
-function getCurrentUser() {
+const getCurrentUser = () => {
   if (typeof window === 'undefined') return null;
   const userStr = localStorage.getItem('auth_user');
   return userStr ? JSON.parse(userStr) : null;
-}
+};
 
 function UserMenu({ onLogout }: { onLogout: () => void }) {
-  const [user, setUser] = useState(() => getCurrentUser());
+  const user = getCurrentUser();
 
   const dropdownItems: MenuProps['items'] = [
     {
@@ -54,15 +38,8 @@ function UserMenu({ onLogout }: { onLogout: () => void }) {
       ),
       disabled: true,
     },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      label: 'Выйти',
-      onClick: onLogout,
-      danger: true,
-    },
+    { type: 'divider' },
+    { key: 'logout', label: 'Выйти', onClick: onLogout, danger: true },
   ];
 
   return (
@@ -84,13 +61,9 @@ export default function AppLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuth);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsAuthenticated(checkAuth());
-    };
-
+    const handleStorageChange = () => setIsAuthenticated(checkAuth());
     window.addEventListener('storage', handleStorageChange);
     setIsAuthenticated(checkAuth());
-
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
@@ -108,12 +81,12 @@ export default function AppLayout() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0',
+          padding: 0,
           width: '100%',
           margin: 0,
           background: '#001529',
           height: 64,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
         }}>
           <Menu
             theme="dark"
