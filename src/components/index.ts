@@ -7,3 +7,4 @@ export { default as FeedbackForm } from './FeedbackForm';
 export { default as ProductEditModal } from './ProductEditModal';
 export { default as ProductFormData } from './ProductFormData';
 export { default as ProductChart } from './ProductChart';
+export { default as ExportButton } from './ExportButton';

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Typography, message, Spin, Alert, Input } from 'antd';
 import { useNavigate } from '@umijs/max';
 import { useProducts } from '@/contexts/ProductContext';
-import { ProductForm, ProductTable, ProductCount, ProductEditModal, ProductChart } from '@/components';
+import { ProductForm, ProductTable, ProductCount, ProductEditModal, ProductChart, ExportButton } from '@/components';
 import { ProductProvider } from '@/contexts/ProductContext';
 import type { Product } from '@/components/ProductTable';
 
@@ -107,6 +107,7 @@ function ProductsContent() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
+        <ExportButton products={products} />
         <ProductTable products={products} onDelete={handleDelete} onEdit={setEditingKey} />
       </div>
 
