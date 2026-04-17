@@ -11,7 +11,7 @@ const getAuthToken = (): string | null => {
 };
 
 const httpLink = createHttpLink({
-  uri: 'https://localhost:7273/graphql',
+  uri: '/graphql',
   fetchOptions: { credentials: 'include' },
 });
 

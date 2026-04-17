@@ -1,6 +1,7 @@
 import { defineConfig } from "@umijs/max";
 
 export default defineConfig({
+  hash: true,
   title: 'SPA-app-on-UmiJS',
   routes: [
     {
@@ -37,4 +38,13 @@ export default defineConfig({
     },
   ],
   npmClient: 'npm',
+  // Проксирование запросов в режиме разработки (npm run dev), чтобы избежать CORS
+  proxy: {
+    '/graphql': {
+      target: 'http://localhost:7000',
+      changeOrigin: true,
+    },
+  },
+  // Исправление конфликта esbuild helpers
+  esbuildMinifyIIFE: true,
 });

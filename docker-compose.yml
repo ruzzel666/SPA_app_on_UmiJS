@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  spa-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spa-client
+    ports:
+      - "3000:80"
+    networks:
+      - shared-app-network
+
+networks:
+  shared-app-network:
+    name: graphql-spa-network
+    external: true
