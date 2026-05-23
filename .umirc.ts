@@ -41,8 +41,10 @@ export default defineConfig({
   // Проксирование запросов в режиме разработки (npm run dev), чтобы избежать CORS
   proxy: {
     '/graphql': {
-      target: 'http://localhost:7000',
+      target: 'https://localhost:7273',
       changeOrigin: true,
+      secure: false, // отключает проверку SSL-сертификата для self-signed
+      pathRewrite: { '^/graphql': '/graphql/' }, // если сервер ожидает /graphql/
     },
   },
   // Исправление конфликта esbuild helpers

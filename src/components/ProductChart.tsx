@@ -28,7 +28,7 @@ export default function ProductChart({ products }: { products: Product[] }) {
     xField: 'category',
     yField: 'count',
     label: {
-      position: 'middle' as const,
+      position: 'top' as const,
       style: { fill: '#FFFFFF', fontSize: 12 },
     },
     colorField: 'category',

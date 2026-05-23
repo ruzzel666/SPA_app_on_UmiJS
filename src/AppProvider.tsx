@@ -13,10 +13,17 @@ const getAuthToken = (): string | null => {
 const httpLink = createHttpLink({
   uri: '/graphql',
   fetchOptions: { credentials: 'include' },
+  ...(process.env.NODE_ENV === 'development' && {
+    fetch: (input: RequestInfo, init?: RequestInit) => {
+      console.log('[GraphQL Request]', input, init);
+      return fetch(input, init);
+    },
+  }),
 });
 
 const authLink = setContext((_, { headers }) => {
   const token = getAuthToken();
+  console.log('[Auth Link] Token present:', !!token);
   return {
     headers: {
       ...headers,
@@ -25,16 +32,31 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
+const errorLink = onError(({ graphQLErrors, networkError, operation, response }) => {
+  console.log('[GraphQL Error] Operation:', operation?.operationName);
+  console.log('[GraphQL Error] Variables:', operation?.variables);
   if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, extensions }) => {
+    graphQLErrors.forEach(({ message, extensions, path }) => {
+      console.error('[GraphQL Error]', {
+        message,
+        extensions,
+        path,
+      });
       if (extensions?.code === 'AUTH_NOT_AUTHENTICATED') {
         console.warn('Требуется авторизация');
       }
     });
   }
   if (networkError) {
-    console.error('Network error:', networkError);
+    console.error('[Network Error]', networkError);
+    console.error('[Network Error] Details:', {
+      name: networkError.name,
+      message: networkError.message,
+      stack: networkError.stack,
+    });
+  }
+  if (response) {
+    console.log('[GraphQL Response]', response);
   }
 });
 
